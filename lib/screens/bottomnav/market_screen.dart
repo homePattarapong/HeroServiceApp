@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heroServiceApp/models/NewsModel.dart';
 import 'package:heroServiceApp/services/rest_api.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MarketScreen extends StatefulWidget {
   MarketScreen({Key key}) : super(key: key);
@@ -24,25 +25,26 @@ class _MarketScreenState extends State<MarketScreen> {
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.30,
-            child: FutureBuilder(
-              future: CallAPI().getLastNews(),
-              builder: (BuildContext context, AsyncSnapshot<List<NewsModel>> snapshot){
-                if(snapshot.hasError){
-                  return Center(
-                    child: Text('มีข้อผิดพลาด ${snapshot.error.toString()}'),
-                  );
-                }else if(snapshot.connectionState == ConnectionState.done){
-                  List<NewsModel> news = snapshot.data;
-                  return _listViewLastNews(news);
-                }else{
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }
-            )
-          ),
+              height: MediaQuery.of(context).size.height * 0.30,
+              child: FutureBuilder(
+                  future: CallAPI().getLastNews(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<NewsModel>> snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child:
+                            Text('มีข้อผิดพลาด ${snapshot.error.toString()}'),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      List<NewsModel> news = snapshot.data;
+                      return _listViewLastNews(news);
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  })),
           Padding(
             padding: const EdgeInsets.only(top: 15.0, left: 15.0, bottom: 15.0),
             child: Text(
@@ -53,22 +55,22 @@ class _MarketScreenState extends State<MarketScreen> {
           Container(
             height: MediaQuery.of(context).size.height * 0.28,
             child: FutureBuilder(
-              future: CallAPI().getAllNews(),
-              builder: (BuildContext context, AsyncSnapshot<List<NewsModel>> snapshot){
-                if(snapshot.hasError){
-                  return Center(
-                    child: Text('มีข้อผิดพลาด ${snapshot.error.toString()}'),
-                  );
-                }else if(snapshot.connectionState == ConnectionState.done){
-                  List<NewsModel> news = snapshot.data;
-                  return _listViewAllNews(news);
-                }else{
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }
-            ),
+                future: CallAPI().getAllNews(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<NewsModel>> snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('มีข้อผิดพลาด ${snapshot.error.toString()}'),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    List<NewsModel> news = snapshot.data;
+                    return _listViewAllNews(news);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
           )
         ],
       ),
@@ -87,11 +89,8 @@ class _MarketScreenState extends State<MarketScreen> {
             width: MediaQuery.of(context).size.width * 0.6,
             child: InkWell(
               onTap: () {
-                Navigator.pushNamed(
-                  context, 
-                  '/newsdetail',
-                  arguments: {'id':newsModel.id}
-                );
+                Navigator.pushNamed(context, '/newsdetail',
+                    arguments: {'id': newsModel.id});
               },
               child: Card(
                 child: Container(
@@ -131,10 +130,8 @@ class _MarketScreenState extends State<MarketScreen> {
               ),
             ),
           );
-      }
-    );
+        });
   }
-
 
   // สร้างชุด ListView สำหรับการแสดงข่าวทั้งหมด
   Widget _listViewAllNews(List<NewsModel> news) {
@@ -147,20 +144,29 @@ class _MarketScreenState extends State<MarketScreen> {
           return ListTile(
             leading: Icon(Icons.pages),
             title: Text(
-              newsModel.topic, 
+              newsModel.topic,
               overflow: TextOverflow.ellipsis,
             ),
             onTap: () {
-              Navigator.pushNamed(
-                  context, 
-                  '/newsdetail',
-                  arguments: {'id':newsModel.id}
-                );
+              _launchInBrowser('https://bit.ly/34NHTpP');
+              // Navigator.pushNamed(context, '/newsdetail',
+              //     arguments: {'id': newsModel.id});
             },
           );
-      }
-    );
+        });
   }
 
-
+  // ฟังก์ชันสำหรับการ Launcher Web Screen
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: true,
+        forceWebView: true,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }

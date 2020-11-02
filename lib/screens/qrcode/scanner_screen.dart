@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_code_tools/qr_code_tools.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:url_launcher/url_launcher.dart';
 
 class ScannerScreen extends StatefulWidget {
   ScannerScreen({Key key}) : super(key: key);
@@ -66,11 +67,13 @@ class _ScannerScreenState extends State<ScannerScreen> {
                           Toast.LENGTH_SHORT, // duration time ระยะเวลาการแสดง
                       gravity: ToastGravity.BOTTOM, // posiotion
                       timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.blue,
                       textColor: Colors.white,
                       fontSize: 16.0);
                   _controller.dispose();
                   // ปิดหน้า scan
+                  _launchInBrowser(val);
+
                   Navigator.pop(context);
                 }
               });
@@ -166,5 +169,27 @@ class _ScannerScreenState extends State<ScannerScreen> {
       });
       print('${error.toString()}');
     });
+  }
+
+  // ฟังก์ชันสำหรับการ Launcher Web Screen
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: true,
+        forceWebView: true,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      // throw 'Could not launch $url';
+      Fluttertoast.showToast(
+          msg: 'Could not launch $url',
+          toastLength: Toast.LENGTH_SHORT, // duration time ระยะเวลาการแสดง
+          gravity: ToastGravity.BOTTOM, // posiotion
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }
