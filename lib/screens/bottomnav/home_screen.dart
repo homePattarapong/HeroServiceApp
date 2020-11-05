@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     "assets/images/menu_icon/cleaner.png",
   ];
 
+  
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -42,7 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (BuildContext context, int index){
         return Card(
           child: InkWell(
-            onTap: (){},
+            onTap: (){
+              Navigator.pushNamed(context, '/orderlist');
+            },
             child: Column(
               children: <Widget>[
                 SizedBox(height: 20),
@@ -58,4 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  
 }
