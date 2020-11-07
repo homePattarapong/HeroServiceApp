@@ -43,6 +43,13 @@ dependencies:
   path: ^1.6.0
   rxdart: ^0.22.1
   qr_code_tools: ^0.0.6
+  qr_flutter: ^3.2.0
+  flutter_launcher_icons: ^0.8.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +71,8 @@ flutter:
     - assets/images/menu_icon/
     - assets/images/welcome/
     - assets/images/bg/
+    - assets/images/logo_qr.png
+    - assets/images/icon.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

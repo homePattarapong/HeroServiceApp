@@ -56,7 +56,7 @@ class _OrderListScreenState extends State<OrderListScreen> with SingleTickerProv
         padding: const EdgeInsets.only(right: 15.0),
         child: Row(
           children: [
-            Icon(Icons.alt_route_rounded),
+            Icon(Icons.access_alarm),
           ],
         ),
       ),
